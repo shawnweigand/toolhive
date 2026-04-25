@@ -1,0 +1,40 @@
+name: Operator Pipeline
+
+on:
+  workflow_dispatch:
+    inputs:
+      deploy_crds:
+        description: "CRDs"
+        type: boolean
+        required: true
+        default: false
+      deploy_operator:
+        description: "Operator"
+        type: boolean
+        required: true
+        default: false
+
+jobs:
+  crds:
+    if: ${{ inputs.deploy_crds }}
+    uses: ./.github/workflows/helm-deploy.yml
+    with:
+      chart_name: toolhive-operator-crds
+      chart_url: oci://ghcr.io/stacklok/toolhive/toolhive-operator-crds
+      version: "0.24.1"
+      namespace: default
+      values_file: ./helm/values.crds.yml
+    secrets:
+      DO_API_TOKEN: ${{ secrets.DO_API_TOKEN }}
+
+  operator:
+    if: ${{ inputs.deploy_operator }}
+    uses: ./.github/workflows/helm-deploy.yml
+    with:
+      chart_name: toolhive-operator
+      chart_url: oci://ghcr.io/stacklok/toolhive/toolhive-operator
+      version: "0.24.1"
+      namespace: toolhive-system
+      values_file: ./helm/values.operator.yml
+    secrets:
+      DO_API_TOKEN: ${{ secrets.DO_API_TOKEN }}

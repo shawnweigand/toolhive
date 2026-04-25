@@ -1,0 +1,65 @@
+name: Helm Deploy (Reusable)
+
+on:
+  workflow_call:
+    inputs:
+      chart_name:
+        description: "Helm release name"
+        required: true
+        type: string
+      chart_url:
+        description: "OCI chart URL"
+        required: true
+        type: string
+      version:
+        description: "Chart version"
+        required: true
+        type: string
+      namespace:
+        description: "Kubernetes namespace"
+        required: true
+        type: string
+      values_file:
+        description: "Path to local values file (e.g. ./helm/values.crds.yml)"
+        required: true
+        type: string
+    secrets:
+      DO_API_TOKEN:
+        required: true
+
+jobs:
+  helm-deploy:
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: Install doctl
+        uses: digitalocean/action-doctl@v2
+        with:
+          token: ${{ secrets.DO_API_TOKEN }}
+
+      - name: Save DigitalOcean kubeconfig
+        run: doctl kubernetes cluster kubeconfig save ${{ vars.DO_CLUSTER_NAME }}
+
+      - name: Helm tool installer
+        uses: azure/setup-helm@v4.2.0
+
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Show Helm Template
+        run: |
+          helm template \
+            ${{ inputs.chart_name }} \
+            ${{ inputs.chart_url }} \
+            --version ${{ inputs.version }} \
+            -n ${{ inputs.namespace }} --create-namespace \
+            -f ${{ inputs.values_file }}
+
+      - name: Deploy
+        run: |
+          helm upgrade --install \
+            ${{ inputs.chart_name }} \
+            ${{ inputs.chart_url }} \
+            --version ${{ inputs.version }} \
+            -n ${{ inputs.namespace }} --create-namespace \
+            -f ${{ inputs.values_file }}

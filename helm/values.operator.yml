@@ -126,10 +126,11 @@ operator:
     # - cluster: The operator will have cluster-wide permissions via ClusterRole and ClusterRoleBinding.
     # - namespace: The operator will have permissions to manage resources in the namespaces specified in `allowedNamespaces`.
     #   The operator will have a ClusterRole and RoleBinding for each namespace in `allowedNamespaces`.
-    scope: cluster
+    scope: namespace
     # -- List of namespaces that the operator is allowed to have permissions to manage.
     # Only used if scope is set to "namespace".
-    allowedNamespaces: []
+    allowedNamespaces:
+      - toolhive
 
   # -- Service account configuration for the operator
   serviceAccount:
