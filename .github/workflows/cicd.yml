@@ -1,4 +1,4 @@
-name: Operator Pipeline
+name: ToolHive Pipeline
 
 on:
   workflow_dispatch:
