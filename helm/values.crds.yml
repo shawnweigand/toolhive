@@ -1,0 +1,17 @@
+# helm show values oci://ghcr.io/stacklok/toolhive/toolhive-operator-crds
+# Pulled: ghcr.io/stacklok/toolhive/toolhive-operator-crds:0.24.1
+# Digest: sha256:c770d048f19d6e712606ca7edda9d027acfbae2b4f9248452534d4bb2e3833da
+
+# -- CRD installation configuration
+crds:
+  # -- Whether to add the "helm.sh/resource-policy: keep" annotation to CRDs
+  # When true, CRDs will not be deleted when the Helm release is uninstalled
+  keep: true
+  # -- Feature flags for CRD groups
+  install:
+    # -- Install Server CRDs (mcpservers, mcpremoteproxies, mcptoolconfigs, mcpgroups)
+    server: true
+    # -- Install Registry CRDs (mcpregistries)
+    registry: true
+    # -- Install VirtualMCP CRDs (virtualmcpservers, virtualmcpcompositetooldefinitions)
+    virtualMcp: true
