@@ -23,7 +23,7 @@ jobs:
       chart_url: oci://ghcr.io/stacklok/toolhive/toolhive-operator-crds
       version: "0.24.1"
       namespace: default
-      values_file: ./helm/values.crds.yml
+      values_file: ./values.crds.yml
     secrets:
       DO_API_TOKEN: ${{ secrets.DO_API_TOKEN }}
 
@@ -35,6 +35,6 @@ jobs:
       chart_url: oci://ghcr.io/stacklok/toolhive/toolhive-operator
       version: "0.24.1"
       namespace: toolhive-system
-      values_file: ./helm/values.operator.yml
+      values_file: ./values.operator.yml
     secrets:
       DO_API_TOKEN: ${{ secrets.DO_API_TOKEN }}
