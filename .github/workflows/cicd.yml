@@ -13,6 +13,11 @@ on:
         type: boolean
         required: true
         default: false
+      deploy_registry:
+        description: "Registry"
+        type: boolean
+        required: true
+        default: false
       deploy_ui:
         description: "UI"
         type: boolean
@@ -43,6 +48,18 @@ jobs:
       values_file: ./values.operator.yml
     secrets:
       DO_API_TOKEN: ${{ secrets.DO_API_TOKEN }}
+
+  registry:
+    if: ${{ inputs.deploy_registry }}
+    uses: ./.github/workflows/helm-deploy.yml
+    with:
+      chart_name: toolhive-registry
+      chart_url: oci://ghcr.io/stacklok/toolhive-registry-server
+      version: "1.4.0"
+      namespace: toolhive-system
+      values_file: ./values.operator.yml
+    secrets:
+      DO_API_TOKEN: ${{ secrets.DO_API_TOKEN }}   
 
   ui:
     if: ${{ inputs.deploy_ui }}
