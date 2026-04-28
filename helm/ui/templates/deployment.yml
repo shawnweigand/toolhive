@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}
+spec:
+  replicas: {{ .Values.deployment.replicas }}
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}
+      annotations:
+        rollme: "{{ now | unixEpoch }}"
+    spec:
+      containers:
+        - name: {{ .Release.Name }}
+          image: "{{ .Values.deployment.image.repository }}:{{ .Values.deployment.image.tag }}"
+          imagePullPolicy: Always
+          ports:
+            - containerPort: {{ .Values.ingress.internalPort }}
+          # envFrom:
+          # - secretRef:
+          #     name: "{{ .Release.Name }}-secret-doppler"
+          # - configMapRef:
+          #     name: "{{ .Release.Name }}-config"
